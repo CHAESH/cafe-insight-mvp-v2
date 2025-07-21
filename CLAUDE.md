@@ -241,12 +241,96 @@ export async function getUserCalculations(userId: string) {
 - 모든 입력 필드에 `<label>` 연결
 - 키보드만으로 모든 기능 사용 가능하도록 구현
 
-## 개발 워크플로우
-1. 새로운 기능은 `feature/기능명` 브랜치에서 개발
-2. TypeScript 컴파일 에러가 없는 상태에서만 커밋
-3. `npm run test:e2e`로 E2E 테스트 통과 확인
-4. Pull Request 생성 후 코드 리뷰 요청
-5. 승인 후 `main` 브랜치에 Squash and Merge
+## Git 관리 규칙 및 워크플로우
+
+### 브랜치 전략
+- **main**: 프로덕션 배포 가능한 안정적인 코드
+- **feature/기능명**: 새로운 기능 개발 (예: `feature/ai-cost-tips`, `feature/payment-integration`)
+- **fix/이슈명**: 버그 수정 (예: `fix/calculation-error`, `fix/mobile-ui`)
+- **docs/문서명**: 문서 업데이트 (예: `docs/api-documentation`)
+
+### 커밋 메시지 규칙 (Conventional Commits)
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+🚀 Generated with [Claude Code](https://claude.ai/code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+**타입 (Type):**
+- `feat`: 새로운 기능 추가
+- `fix`: 버그 수정
+- `docs`: 문서 변경
+- `style`: 코드 스타일 변경 (포맷팅, 세미콜론 등)
+- `refactor`: 코드 리팩토링
+- `test`: 테스트 추가 또는 수정
+- `chore`: 빌드 과정 또는 도구 변경
+
+**스코프 (Scope) 예시:**
+- `ai`: AI 기능 관련
+- `calc`: 원가계산 관련  
+- `auth`: 인증 관련
+- `payment`: 결제 관련
+- `ui`: UI/UX 관련
+- `pwa`: PWA 관련
+
+**예시 커밋 메시지:**
+```
+feat(ai): AI 원가절감 팁 생성 기능 추가
+
+- Vercel AI SDK 통합
+- GPT-4o-mini 모델 사용
+- 24시간 캐싱 구현
+- 사용량 제한 적용
+
+🚀 Generated with [Claude Code](https://claude.ai/code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+### 개발 워크플로우
+1. **브랜치 생성**: `git checkout -b feature/기능명`
+2. **개발 및 테스트**: 기능 구현 후 로컬 테스트
+3. **품질 검증**: Validation Gates 통과 확인
+4. **커밋**: 규칙에 맞는 커밋 메시지 작성
+5. **푸시**: `git push origin feature/기능명`
+6. **PR 생성**: GitHub에서 Pull Request 생성
+7. **코드 리뷰**: 필요시 피드백 반영
+8. **병합**: Squash and Merge로 main에 병합
+
+### 자동 Git 관리 시 적용 규칙
+제가 Git 작업을 수행할 때 다음 규칙을 자동으로 적용합니다:
+
+1. **커밋 전 체크리스트**:
+   - TypeScript 컴파일 확인
+   - 테스트 통과 확인
+   - console.log() 제거 확인
+
+2. **커밋 메시지 자동 생성**:
+   - Conventional Commits 형식 준수
+   - 적절한 타입과 스코프 자동 선택
+   - Claude Code 서명 자동 추가
+
+3. **브랜치 관리**:
+   - 기능별 적절한 브랜치명 생성
+   - main 브랜치 보호 (직접 커밋 금지)
+
+4. **PR 관리**:
+   - 상세한 PR 설명 자동 생성
+   - 체크리스트 포함
+   - 적절한 라벨 제안
+
+### Git 훅 설정 (권장)
+```bash
+# pre-commit: 커밋 전 검증
+npm run typecheck && npm run format
+
+# pre-push: 푸시 전 테스트
+npm run test:e2e
+```
 
 ## Validation Gates (품질 검증 기준)
 개발 진행 시 다음 단계별 검증을 반드시 통과해야 합니다:
