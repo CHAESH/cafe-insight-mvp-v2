@@ -243,11 +243,48 @@ export async function getUserCalculations(userId: string) {
 
 ## Git 관리 규칙 및 워크플로우
 
-### 브랜치 전략
-- **main**: 프로덕션 배포 가능한 안정적인 코드
+### 브랜치 전략 (GitHub Flow 변형)
+- **main**: 프로덕션 배포 가능한 안정적인 코드 (직접 푸시 금지)
+- **develop**: 개발 중인 코드 (기본 작업 브랜치)
 - **feature/기능명**: 새로운 기능 개발 (예: `feature/ai-cost-tips`, `feature/payment-integration`)
 - **fix/이슈명**: 버그 수정 (예: `fix/calculation-error`, `fix/mobile-ui`)
+- **hotfix/이슈명**: 긴급 버그 수정 (main에서 분기)
 - **docs/문서명**: 문서 업데이트 (예: `docs/api-documentation`)
+
+#### Git 작업 흐름
+1. **항상 develop에서 작업 시작**
+   ```bash
+   git checkout develop
+   git pull origin develop
+   ```
+
+2. **새 기능 개발 시**
+   ```bash
+   git checkout -b feature/기능명
+   # 작업 완료 후
+   git checkout develop
+   git merge feature/기능명
+   git push origin develop
+   ```
+
+3. **배포 준비가 되면**
+   ```bash
+   git checkout main
+   git merge develop
+   git push origin main
+   git tag v1.0.0  # 버전 태그 추가
+   ```
+
+4. **긴급 수정이 필요하면**
+   ```bash
+   git checkout main
+   git checkout -b hotfix/이슈명
+   # 수정 후
+   git checkout main
+   git merge hotfix/이슈명
+   git checkout develop
+   git merge hotfix/이슈명
+   ```
 
 ### 커밋 메시지 규칙 (Conventional Commits)
 ```
