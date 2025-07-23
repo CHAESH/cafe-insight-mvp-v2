@@ -25,7 +25,7 @@ import makeServerClient from "~/core/lib/supa-client.server";
  * Add more providers as you enable them in your Supabase dashboard
  */
 const paramsSchema = z.object({
-  provider: z.enum(["github", "kakao"]),
+  provider: z.enum(["google", "kakao"]),
 });
 
 /**
@@ -58,6 +58,10 @@ export async function loader({ params, request }: Route.LoaderArgs) {
       options: {
         // Set the callback URL for when authentication is complete
         redirectTo: `${process.env.SITE_URL}/auth/social/complete/${parsedParams.provider}`,
+        // 카카오의 경우 이메일 스코프 제외
+        scopes: parsedParams.provider === 'kakao' ? undefined : 'email profile',
+        // 또는 카카오 전용 스코프 설정
+        // scopes: parsedParams.provider === 'kakao' ? 'profile_nickname profile_image' : 'email profile',
       },
     });
 
