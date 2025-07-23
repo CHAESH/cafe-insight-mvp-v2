@@ -414,6 +414,7 @@ npm run typecheck && npm run format
 npm run test:e2e
 ```
 
+
 ## Validation Gates (품질 검증 기준)
 개발 진행 시 다음 단계별 검증을 반드시 통과해야 합니다:
 
