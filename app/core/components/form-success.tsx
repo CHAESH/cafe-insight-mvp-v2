@@ -23,7 +23,7 @@ import { CheckCircle2Icon } from "lucide-react";
  * @param message - The success message to display
  * @returns A component that displays the success message with consistent styling
  */
-export default function FormSuccess({ message }: { message: string }) {
+export function FormSuccess({ message }: { message: string }) {
   return (
     <div className="flex items-center justify-center gap-2 text-sm text-green-500">
       {/* Check-circle icon to visually indicate success */}
@@ -33,3 +33,8 @@ export default function FormSuccess({ message }: { message: string }) {
     </div>
   );
 }
+
+/**
+ * Default export for backward compatibility
+ */
+export default FormSuccess;

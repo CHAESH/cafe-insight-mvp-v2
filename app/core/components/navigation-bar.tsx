@@ -18,7 +18,6 @@
  */
 import { CogIcon, HomeIcon, LogOutIcon, MenuIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router";
 
 import LangSwitcher from "./lang-switcher";
 import ThemeSwitcher from "./theme-switcher";
@@ -33,13 +32,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Separator } from "./ui/separator";
-import {
-  SheetClose,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTrigger,
-} from "./ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTrigger } from "./ui/sheet";
 
 /**
  * UserMenu Component
@@ -90,20 +83,20 @@ function UserMenu({
         {/* Dashboard link */}
         <DropdownMenuItem asChild>
           <SheetClose asChild>
-            <Link to="/dashboard" viewTransition>
+            <a href="/dashboard">
               <HomeIcon className="size-4" />
               Dashboard
-            </Link>
+            </a>
           </SheetClose>
         </DropdownMenuItem>
         
         {/* Logout link */}
         <DropdownMenuItem asChild>
           <SheetClose asChild>
-            <Link to="/logout" viewTransition>
+            <a href="/logout">
               <LogOutIcon className="size-4" />
               Log out
-            </Link>
+            </a>
           </SheetClose>
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -131,20 +124,16 @@ function AuthButtons() {
     <>
       {/* Sign in button (less prominent) */}
       <Button variant="ghost" asChild>
-        <SheetClose asChild>
-          <Link to="/login" viewTransition>
-            Sign in
-          </Link>
-        </SheetClose>
+        <a href="/auth/login">
+          로그인
+        </a>
       </Button>
       
       {/* Sign up button (more prominent) */}
       <Button variant="default" asChild>
-        <SheetClose asChild>
-          <Link to="/join" viewTransition>
-            Sign up
-          </Link>
-        </SheetClose>
+        <a href="/auth/signup">
+          회원가입
+        </a>
       </Button>
     </>
   );
@@ -177,16 +166,16 @@ function Actions() {
           {/* 카페인사이트 설정 메뉴 */}
           <DropdownMenuItem asChild>
             <SheetClose asChild>
-              <Link to="/account/edit" viewTransition>
+              <a href="/account/edit">
                 계정 설정
-              </Link>
+              </a>
             </SheetClose>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <SheetClose asChild>
-              <Link to="/subscription" viewTransition>
+              <a href="/subscription">
                 구독 관리
-              </Link>
+              </a>
             </SheetClose>
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -245,34 +234,31 @@ export function NavigationBar({
     >
       <div className="mx-auto flex h-full w-full max-w-screen-2xl items-center justify-between py-3">
         {/* Application logo/title with link to home */}
-        <Link to="/">
+        <a href="/">
           <h1 className="text-lg font-extrabold">{t("home.title")}</h1>
-        </Link>
+        </a>
         
         {/* Desktop navigation menu (hidden on mobile) */}
         <div className="hidden h-full items-center gap-5 md:flex">
           {/* Main navigation links */}
-          <Link
-            to="/blog"
-            viewTransition
+          <a
+            href="/blog"
             className="text-muted-foreground hover:text-foreground text-sm transition-colors"
           >
             Blog
-          </Link>
-          <Link
-            to="/contact"
-            viewTransition
+          </a>
+          <a
+            href="/contact"
             className="text-muted-foreground hover:text-foreground text-sm transition-colors"
           >
             Contact
-          </Link>
-          <Link
-            to="/payments/checkout"
-            viewTransition
+          </a>
+          <a
+            href="/payments/checkout"
             className="text-muted-foreground hover:text-foreground text-sm transition-colors"
           >
             Payments
-          </Link>
+          </a>
           
           <Separator orientation="vertical" />
           
@@ -300,20 +286,21 @@ export function NavigationBar({
           )}
         </div>
         
-        {/* Mobile menu trigger (hidden on desktop) */}
-        <SheetTrigger className="size-6 md:hidden">
-          <MenuIcon />
-        </SheetTrigger>
-        <SheetContent>
-          <SheetHeader>
+        {/* Mobile menu (hidden on desktop) */}
+        <Sheet>
+          <SheetTrigger className="size-6 md:hidden">
+            <MenuIcon />
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
             <SheetClose asChild>
-              <Link to="/blog">Blog</Link>
+              <a href="/blog">Blog</a>
             </SheetClose>
             <SheetClose asChild>
-              <Link to="/contact">Contact</Link>
+              <a href="/contact">Contact</a>
             </SheetClose>
             <SheetClose asChild>
-              <Link to="/payments/checkout">Payments</Link>
+              <a href="/payments/checkout">Payments</a>
             </SheetClose>
           </SheetHeader>
           {loading ? (
@@ -337,13 +324,27 @@ export function NavigationBar({
                     <Actions />
                   </div>
                   <div className="grid grid-cols-2 gap-2">
-                    <AuthButtons />
+                    <SheetClose asChild>
+                      <Button variant="ghost" asChild>
+                        <a href="/auth/login">
+                          로그인
+                        </a>
+                      </Button>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Button variant="default" asChild>
+                        <a href="/auth/signup">
+                          회원가입
+                        </a>
+                      </Button>
+                    </SheetClose>
                   </div>
                 </div>
               )}
             </SheetFooter>
           )}
         </SheetContent>
+        </Sheet>
       </div>
     </nav>
   );

@@ -45,14 +45,20 @@ export default [
 
   layout("core/layouts/navigation.layout.tsx", [
     route("/auth/confirm", "features/auth/screens/confirm.tsx"),
-    index("features/home/screens/home.tsx"),
+    index("routes/_index.tsx"),
     route("/error", "core/screens/error.tsx"),
+    
+    // 테스트 라우트
+    route("/test-auth", "routes/test-auth.tsx"),
+    route("/debug", "routes/debug.tsx"),
+    route("/test-supabase", "routes/test-supabase.tsx"),
+    route("/test-navigation", "routes/test-navigation.tsx"),
     
     layout("core/layouts/public.layout.tsx", [
       // 로그인하지 않은 사용자용 라우트
-      route("/login", "features/auth/screens/login.tsx"),
-      route("/join", "features/auth/screens/join.tsx"),
       ...prefix("/auth", [
+        route("/login", "routes/auth/login.tsx"),
+        route("/signup", "routes/auth/signup.tsx"),
         route("/api/resend", "features/auth/api/resend.tsx"),
         route(
           "/forgot-password/reset",
@@ -69,6 +75,10 @@ export default [
             "/complete/:provider",
             "features/auth/screens/social/complete.tsx",
           ),
+          route(
+            "/complete-profile",
+            "features/auth/screens/social/complete-profile.tsx",
+          ),
         ]),
       ]),
     ]),
@@ -84,38 +94,33 @@ export default [
       route("/logout", "features/auth/screens/logout.tsx"),
     ]),
     
-    // 결제 관련 라우트
-    ...prefix("/payments", [
-      route("/checkout", "features/payments/screens/checkout.tsx"),
-      layout("core/layouts/private.layout.tsx", { id: "private-payments" }, [
-        route("/success", "features/payments/screens/success.tsx"),
-        route("/failure", "features/payments/screens/failure.tsx"),
-      ]),
-    ]),
+    // 결제 관련 라우트 - Task 6에서 구현 예정
+    // ...prefix("/payments", [
+    //   route("/checkout", "features/payments/screens/checkout.tsx"),
+    //   layout("core/layouts/private.layout.tsx", { id: "private-payments" }, [
+    //     route("/success", "features/payments/screens/success.tsx"),
+    //     route("/failure", "features/payments/screens/failure.tsx"),
+    //   ]),
+    // ]),
   ]),
 
   // 인증된 사용자 전용 - 카페인사이트 메인 기능
   layout("core/layouts/private.layout.tsx", { id: "private-dashboard" }, [
-    layout("features/users/layouts/dashboard.layout.tsx", [
-      ...prefix("/dashboard", [
-        index("features/dashboard/screens/dashboard.tsx"),
-        route("/calculations", "features/calculations/screens/calculations.tsx"),
-        route("/payments", "features/payments/screens/payments.tsx"),
-      ]),
+    // layout("features/users/layouts/dashboard.layout.tsx", [
+      route("/dashboard", "routes/dashboard.tsx"),
       
       // 원가계산 기능
       ...prefix("/calculations", [
-        index("features/calculations/screens/calculations-list.tsx"),
-        route("/new", "features/calculations/screens/new-calculation.tsx"),
-        route("/:id", "features/calculations/screens/calculation-detail.tsx"),
-        route("/:id/edit", "features/calculations/screens/edit-calculation.tsx"),
+        index("routes/calculations/_index.tsx"),
+        route("/new", "routes/calculations/new.tsx"),
+        route("/:id", "routes/calculations/$id.tsx"),
       ]),
       
-      // 사용자 계정 관리
-      route("/account/edit", "features/users/screens/account.tsx"),
+      // 사용자 계정 관리 - 추후 구현
+      // route("/account/edit", "features/users/screens/account.tsx"),
       
-      // 구독 관리
-      route("/subscription", "features/payments/screens/subscription.tsx"),
-    ]),
+      // 구독 관리 - Task 6에서 구현 예정
+      // route("/subscription", "features/payments/screens/subscription.tsx"),
+    // ]),
   ]),
 ] satisfies RouteConfig;

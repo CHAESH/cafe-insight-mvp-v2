@@ -9,10 +9,13 @@
  * The module includes:
  * - Authentication guard to ensure a user is logged in
  * - HTTP method guard to ensure requests use the correct HTTP method
+ * - User data helper to get current user info
  */
-import type { SupabaseClient } from "@supabase/supabase-js";
-
-import { data } from "react-router";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
+import { data, redirect } from "react-router";
+import { db } from "~/core/db/drizzle-client.server";
+import { users } from "~/core/db/schema";
+import { eq } from "drizzle-orm";
 
 /**
  * Require user authentication for a route or action
@@ -69,4 +72,59 @@ export function requireMethod(method: string) {
       throw data(null, { status: 405 });
     }
   };
+}
+
+/**
+ * Get the current authenticated user with database info
+ * 
+ * This function retrieves the authenticated user from Supabase and fetches
+ * their corresponding database record. Useful for getting user profile data,
+ * subscription status, AI usage limits, etc.
+ * 
+ * @param client - The Supabase client instance
+ * @returns User data from database or null if not authenticated
+ */
+export async function getCurrentUser(client: SupabaseClient) {
+  const {
+    data: { user },
+  } = await client.auth.getUser();
+  
+  if (!user) return null;
+  
+  const dbUser = await db.query.users.findFirst({
+    where: eq(users.id, user.id),
+  });
+  
+  return dbUser;
+}
+
+/**
+ * Require user authentication and return user data
+ * 
+ * Combines authentication check with user data retrieval.
+ * Throws if user is not authenticated or not found in database.
+ * 
+ * @param client - The Supabase client instance
+ * @returns Authenticated user data from database
+ * @throws {Response} 401 if not authenticated, 404 if user not in database
+ */
+export async function requireUser(client: SupabaseClient) {
+  const {
+    data: { user },
+  } = await client.auth.getUser();
+  
+  if (!user) {
+    throw redirect("/auth/login");
+  }
+  
+  const dbUser = await db.query.users.findFirst({
+    where: eq(users.id, user.id),
+  });
+  
+  if (!dbUser) {
+    // 사용자가 인증되었지만 DB에 없는 경우 (첫 로그인)
+    throw redirect("/onboarding");
+  }
+  
+  return dbUser;
 }

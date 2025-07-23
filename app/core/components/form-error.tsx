@@ -37,3 +37,22 @@ export default function FormErrors({ errors }: { errors: string[] }) {
     </div>
   );
 }
+
+/**
+ * FormError component for displaying a single error message
+ * 
+ * This component renders a single error message with consistent visual styling.
+ * 
+ * @param message - The error message to display
+ * @returns A component that displays the error message with consistent styling
+ */
+export function FormError({ message }: { message: string }) {
+  return (
+    <div className="flex items-center gap-2 text-sm text-red-500">
+      {/* X-circle icon to visually indicate an error */}
+      <XCircleIcon className="size-4" />
+      {/* The error message text */}
+      <p>{message}</p>
+    </div>
+  );
+}
